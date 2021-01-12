@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 services:
   # back-end api built with golang
   golang:
@@ -29,13 +29,27 @@ services:
     volumes:
       - ./postgres/migrations:/docker-entrypoint-initdb.d/migrations
 
+  # build for certbot
+  certbot:
+    image: certbot/certbot:latest
+    command: certonly --webroot --webroot-path=/var/www/certbot --email xxuechin@gmail.com --agree-tos --no-eff-email -d selcode.cn -d www.selcode.cn
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/logs:/var/log/letsencrypt
+      - ./certbot/data:/var/www/certbot
+
   # nginx is used for ssl termination
   nginx:
-    build: 
-      context: nginx
-      target: dev
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./public:/var/www/html
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/nginx/ssl
+      - ./certbot/data:/var/www/certbot
     ports:
-      - "443:443"
+      - 80:80
+      - 443:443
     depends_on:
       - react
       - golang
