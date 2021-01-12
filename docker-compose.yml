@@ -42,7 +42,7 @@ services:
   # build for certbot
   certbot:
     image: certbot/certbot:latest
-    command: certonly --webroot --webroot-path=/var/www/certbot --email xxuechin@gmail.com --agree-tos --no-eff-email -d selcode.cn -d www.selcode.cn
+    command: certonly --webroot --webroot-path=/var/www/certbot --email xxuechin@gmail.com --agree-tos --no-eff-email -d selcode.cn -d *.selcode.cn
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/logs:/var/log/letsencrypt
