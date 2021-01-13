@@ -1,9 +1,10 @@
 selcode.cn *.selcode.cn{
         gzip
+        log access_log.log
         proxy / http://react {  # 转发所有 /ws 为 websocket
                 react:3000
         }
-        proxy / http://golang {  # 转发所有 /golang 为 websocket
+        proxy /api http://golang {  # 转发所有 /golang 为 websocket
                 golang:5000
         }
 }
