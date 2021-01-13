@@ -22,31 +22,26 @@ services:
       - ./react:/root
     ports:
       - "3000:3000"
-
-  # nginx is used for ssl termination
-  nginx:
-    image: nginx:latest
+      
+  # caddy is used for ssl termination
+  caddy:
+    image: abiosoft/caddy:latest
     restart: always
+    environment:
+      - TZ=Asia/Shanghai
+      - agree
+      - email xxuechin@gmail.com
     volumes:
-      - ./public:/var/www/html
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./certbot/conf:/etc/nginx/ssl
-      - ./certbot/data:/var/www/certbot
+      - "/root/caddy/conf/Caddyfile:/etc/Caddyfile"
+      - "/root/caddy/.caddy:/root/.caddy"
+      - "/root/caddy/logs:/opt/logs"
+      - "/root/caddy/www:/opt/www"
     ports:
       - 80:80
       - 443:443
     depends_on:
       - react
       - golang
-
-  # build for certbot
-  certbot:
-    image: certbot/certbot:latest
-    command: certonly --webroot --webroot-path=/var/www/certbot --email xxuechin@gmail.com --agree-tos --no-eff-email -d selcode.cn -d *.selcode.cn
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/logs:/var/log/letsencrypt
-      - ./certbot/data:/var/www/certbot
 
   # postgres is our primary data store
   postgres:
