@@ -32,10 +32,10 @@ services:
       - agree
       - email xxuechin@gmail.com
     volumes:
-      - "/root/caddy/conf/Caddyfile:/etc/Caddyfile"
-      - "/root/caddy/.caddy:/root/.caddy"
-      - "/root/caddy/logs:/opt/logs"
-      - "/root/caddy/www:/opt/www"
+      - "./caddy/conf/Caddyfile:/etc/Caddyfile"
+      - "./caddy/.caddy:/root/.caddy"
+      - "./caddy/logs:/opt/logs"
+      - "./caddy/www:/opt/www"
     ports:
       - 80:80
       - 443:443
