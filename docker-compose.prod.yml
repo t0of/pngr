@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 services:
   # back-end api built with golang
   golang-prod:
@@ -19,18 +19,23 @@ services:
     ports:
       - "3000:3000"
 
-  # nginx is used for ssl termination
-  nginx-prod:
-    restart: always
-    build: 
-      context: nginx
-      target: prod
-    # volumes:
-    #  - ../certs-data:/data/letsencrypt
-    #  - /etc/letsencrypt/:/etc/letsencrypt/
+
+  # caddy is used for ssl termination
+  caddy-prod:
+    image: caddy:latest
+    restart: unless-stopped
+    volumes:
+      - $PWD/caddy/conf/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/caddy/www:/srv
+      - caddy_data:/data
+      - caddy_config:/config
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     depends_on:
       - golang-prod
       - react-prod
+      
+volumes:
+  caddy_data:
+  caddy_config:
