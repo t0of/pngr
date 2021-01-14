@@ -18,8 +18,6 @@ services:
       target: prod
     ports:
       - "3000:3000"
-
-
   # caddy is used for ssl termination
   caddy-prod:
     image: caddy:latest
@@ -35,7 +33,7 @@ services:
     depends_on:
       - golang-prod
       - react-prod
-      
+
 volumes:
   caddy_data:
   caddy_config:

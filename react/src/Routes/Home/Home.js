@@ -8,7 +8,7 @@ export default class Home extends Component {
       <Container className="page">
         <Header as='h1'>
           <Icon name='rocket'/>
-          Welcome to PNGR!
+          欢迎来到源计划!
         </Header>
         <Segment>
           <p>This is a boilerplate app using React for the front-end, and Golang + Postgres for the backend.</p>
