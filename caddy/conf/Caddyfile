@@ -1,10 +1,29 @@
-selcode.cn *.selcode.cn{
-        gzip
-        log access_log.log
-        proxy / http://react {  # 转发所有 /ws 为 websocket
-                react:3000
-        }
-        proxy /api http://golang {  # 转发所有 /golang 为 websocket
-                golang:5000
-        }
+{
+    email  xxuechin@gmail.com
+    debug
+}
+selcode.cn {
+	redir https://www.selcode.cn{uri}
+}
+www.selcode.cn {
+	encode gzip
+	file_server
+
+
+	header / {
+		Strict-Transport-Security "max-age=31536000;"
+		X-XSS-Protection "1; mode=block"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+	}
+
+	header /api {
+		Access-Control-Allow-Origin *
+		Access-Control-Allow-Methods "GET, POST, DELETE, OPTIONS"
+		Content-Type "application/javascript"
+	}
+
+	reverse_proxy  react:3000
+	reverse_proxy /api/*  golang:5000
+	reverse_proxy /sockjs-node/* react:3000	
 }

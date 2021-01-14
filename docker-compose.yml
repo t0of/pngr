@@ -8,8 +8,8 @@ services:
     volumes:
       - ./golang:/root
     ports:
-      - "5000:5000"
-    env_file: .env.example
+      - 5000:5000
+    env_file: .env
     depends_on:
       - postgres
 
@@ -21,21 +21,17 @@ services:
     volumes:
       - ./react:/root
     ports:
-      - "3000:3000"
+      - 3000:3000
       
   # caddy is used for ssl termination
   caddy:
-    image: abiosoft/caddy:latest
-    restart: always
-    environment:
-      - TZ=Asia/Shanghai
-      - agree
-      - email xxuechin@gmail.com
+    image: caddy:latest
+    restart: unless-stopped
     volumes:
-      - "./caddy/conf/Caddyfile:/etc/Caddyfile"
-      - "./caddy/.caddy:/root/.caddy"
-      - "./caddy/logs:/opt/logs"
-      - "./caddy/www:/opt/www"
+      - $PWD/caddy/conf/Caddyfile:/etc/caddy/Caddyfile
+      - $PWD/caddy/www:/srv
+      - caddy_data:/data
+      - caddy_config:/config
     ports:
       - 80:80
       - 443:443
@@ -49,5 +45,6 @@ services:
     volumes:
       - ./postgres/migrations:/docker-entrypoint-initdb.d/migrations
 
-
-
+volumes:
+  caddy_data:
+  caddy_config:
